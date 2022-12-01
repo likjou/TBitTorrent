@@ -17,3 +17,6 @@ Most of the configurations are default from the rain torrent configurations, How
 
 Note:
 Thanks to [Gocui](https://github.com/jroimartin/gocui) and [rain](https://github.com/cenkalti/rain) for creating such amazing library so that i can create this :D. First time creating a Terminal ui app, its kinda messy so feel free to let me know what you guys think.
+
+UPDATE:
+01-12-2022: Fixed character display error in printing tables.
