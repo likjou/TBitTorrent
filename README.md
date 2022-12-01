@@ -5,8 +5,8 @@ BitTorrent Client for terminal in Go. Written with [Gocui](https://github.com/jr
 
 ## Screenshot
 
-![TBitTorrent](tbittorrent.png)
-![TBitTorrent2](tbittorrent2.png)
+![TBitTorrent](tbittorrent.PNG)
+![TBitTorrent2](tbittorrent2.PNG)
 
 
 ## Configuration
