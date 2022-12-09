@@ -48,8 +48,13 @@ func torListTicker(g *gocui.Gui, v *gocui.View) {
 				torPeers := strconv.Itoa(tor.Stats().Peers.Total)
 				torDownSpeed := human.Bytes(uint64(tor.Stats().Speed.Download))
 				torUpSpeed := human.Bytes(uint64(tor.Stats().Speed.Upload))
+				
+				newName := ""
+				if len(torName) >= 35 {
+					newName = torName[:35] + "..."
+				}
 
-				table.AddRow("|"+torName, "|"+torSize, "|"+torProg, "|"+torStatus, "|"+torSeed, "|"+torPeers, "|"+torDownSpeed, "|"+torUpSpeed)
+				table.AddRow("|"+newName, "|"+torSize, "|"+torProg, "|"+torStatus, "|"+torSeed, "|"+torPeers, "|"+torDownSpeed, "|"+torUpSpeed)
 			}
 
 			fmt.Fprintf(v, "%v", table)
