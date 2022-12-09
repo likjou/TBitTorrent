@@ -3,8 +3,9 @@ package keybindings
 import (
 	"log"
 
+	u "aptorrent/utils"
+
 	"github.com/jroimartin/gocui"
-	u "github.com/likjou/TBitTorrent/utils"
 )
 
 // all key presses for each individual view

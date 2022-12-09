@@ -6,9 +6,9 @@ import (
 )
 
 var (
-	publicPeerIDPrefix                    = "-TB" + Version + "-"
-	publicExtensionHandshakeClientVersion = "TBittorrent " + Version
-	trackerHTTPPublicUserAgent            = "TBittorrent/" + Version
+	publicPeerIDPrefix                    = "-AP" + Version + "-"
+	publicExtensionHandshakeClientVersion = "APtorrent " + Version
+	trackerHTTPPublicUserAgent            = "APtorrent/" + Version
 )
 
 //almost everything here is default just changed some names. Feel free to configure yourself :D
@@ -194,8 +194,8 @@ type Config struct {
 // DefaultConfig for Session. Do not pass zero value Config to NewSession. Copy this struct and modify instead.
 var AptorrentConfig = Config{
 	// Session
-	Database:                               "~/TBittorrent/session.db",
-	DataDir:                                "~/TBittorrent/data",
+	Database:                               "~/APtorrent/session.db",
+	DataDir:                                "~/APtorrent/data",
 	DataDirIncludesTorrentID:               true,
 	Host:                                   "0.0.0.0",
 	PortBegin:                              20000,
@@ -204,7 +204,7 @@ var AptorrentConfig = Config{
 	PEXEnabled:                             true,
 	ResumeWriteInterval:                    30 * time.Second,
 	PrivatePeerIDPrefix:                    "-AP" + Version + "-",
-	PrivateExtensionHandshakeClientVersion: "Tbittorrent " + Version,
+	PrivateExtensionHandshakeClientVersion: "APtorrent " + Version,
 	BlocklistUpdateInterval:                24 * time.Hour,
 	BlocklistUpdateTimeout:                 10 * time.Minute,
 	BlocklistEnabledForTrackers:            true,
@@ -232,7 +232,7 @@ var AptorrentConfig = Config{
 	TrackerStopTimeout:          5 * time.Second,
 	TrackerMinAnnounceInterval:  time.Minute,
 	TrackerHTTPTimeout:          10 * time.Second,
-	TrackerHTTPPrivateUserAgent: "Tbittorrent/" + Version,
+	TrackerHTTPPrivateUserAgent: "APtorrent/" + Version,
 	TrackerHTTPMaxResponseSize:  2 << 20,
 	TrackerHTTPVerifyTLS:        true,
 

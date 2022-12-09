@@ -1,24 +1,26 @@
-module github.com/likjou/TBitTorrent
+module aptorrent
 
 go 1.18
 
 require (
+	github.com/cenkalti/rain v1.11.0
+	github.com/dustin/go-humanize v1.0.0
+	github.com/jroimartin/gocui v0.5.0
+	github.com/olekukonko/tablewriter v0.0.5
+)
+
+require (
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/cenkalti/log v1.0.0 // indirect
-	github.com/cenkalti/rain v1.11.0 // indirect
-	github.com/dustin/go-humanize v1.0.0 // indirect
-	github.com/fatih/color v1.10.0 // indirect
 	github.com/gofrs/uuid v4.2.0+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/google/btree v1.1.2 // indirect
-	github.com/gosuri/uitable v0.0.4 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/jackpal/bencode-go v1.0.0 // indirect
-	github.com/jroimartin/gocui v0.5.0 // indirect
 	github.com/juju/ratelimit v1.0.2 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
-	github.com/mattn/go-colorable v0.1.8 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/mattn/go-runewidth v0.0.10 // indirect
 	github.com/minio/sha256-simd v1.0.0 // indirect

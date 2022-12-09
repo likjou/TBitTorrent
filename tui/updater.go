@@ -5,10 +5,13 @@ import (
 	"strconv"
 	"time"
 
+	"text/tabwriter"
+
+	u "aptorrent/utils"
+
 	human "github.com/dustin/go-humanize"
-	"github.com/gosuri/uitable"
 	"github.com/jroimartin/gocui"
-	u "github.com/likjou/TBitTorrent/utils"
+	"github.com/olekukonko/tablewriter"
 )
 
 const (
@@ -30,9 +33,20 @@ func torListTicker(g *gocui.Gui, v *gocui.View) {
 			v.Title = "(Press Ctrl + h for help)"
 			v.Highlight = true
 
-			table := uitable.New()
-			table.MaxColWidth = 50
-			table.AddRow("|NAME", "|SIZE", "|PROGRESS", "|STATUS", "|SEEDS", "|PEERS", "|DOWN SPEED", "|UP SPEED")
+			//temp table specify view as io
+			table2 := tablewriter.NewWriter(v)
+
+			//temp table style
+			table2.SetColWidth(40)
+			table2.SetAutoWrapText(true)
+			table2.SetBorder(false)
+			table2.SetHeaderLine(false)
+			table2.SetCenterSeparator("_")
+			table2.SetColumnSeparator("|")
+			table2.SetRowSeparator("_")
+
+			//temp header
+			table2.SetHeader([]string{"NAME", "SIZE", "PROGRESS", "STATUS", "SEEDS", "PEERS", "DOWN SPEED", "UP SPEED"})
 
 			for _, tor := range u.FilteredTors {
 				torName := tor.Name()
@@ -48,16 +62,16 @@ func torListTicker(g *gocui.Gui, v *gocui.View) {
 				torPeers := strconv.Itoa(tor.Stats().Peers.Total)
 				torDownSpeed := human.Bytes(uint64(tor.Stats().Speed.Download))
 				torUpSpeed := human.Bytes(uint64(tor.Stats().Speed.Upload))
-				
+
 				newName := ""
 				if len(torName) >= 35 {
 					newName = torName[:35] + "..."
 				}
 
-				table.AddRow("|"+newName, "|"+torSize, "|"+torProg, "|"+torStatus, "|"+torSeed, "|"+torPeers, "|"+torDownSpeed, "|"+torUpSpeed)
+				table2.Append([]string{newName, torSize, torProg, torStatus, torSeed, torPeers, torDownSpeed, torUpSpeed})
 			}
 
-			fmt.Fprintf(v, "%v", table)
+			table2.Render()
 
 			return nil
 		})
@@ -153,7 +167,7 @@ func Layout(g *gocui.Gui) error {
 		fmt.Fprintln(v1, "Stopped")
 		fmt.Fprintln(v1, "Verifying")
 
-		v1.Title = "TBitTorrent"
+		v1.Title = "APTorrent"
 		v1.Highlight = true
 
 		if _, err = u.SetCurrentViewOnTop(g, "side"); err != nil {
@@ -169,11 +183,18 @@ func Layout(g *gocui.Gui) error {
 		v2.SetCursor(0, 1)
 		v2.Title = "(Press Ctrl + h for help)"
 
-		table := uitable.New()
-		table.MaxColWidth = 50
-		table.AddRow("|NAME", "|SIZE", "|PROGRESS", "|STATUS", "|SEEDS", "|PEERS", "|DOWN SPEED", "|UP SPEED")
-		fmt.Fprintf(v2, "%v", table)
+		table2 := tablewriter.NewWriter(v2)
 
+		//temp table style
+		table2.SetAutoWrapText(false)
+		table2.SetBorder(false)
+		table2.SetHeaderLine(false)
+		table2.SetCenterSeparator("_")
+		table2.SetColumnSeparator("|")
+		table2.SetRowSeparator("_")
+
+		table2.Append([]string{"NAME", "SIZE", "PROGRESS", "STATUS", "SEEDS", "PEERS", "DOWN SPEED", "UP SPEED"})
+		table2.Render()
 		u.CurrTorListView = "alltorrent"
 
 		go torListTicker(g, v2)
@@ -193,16 +214,14 @@ func Layout(g *gocui.Gui) error {
 		}
 		v4.Title = "Transfer"
 
-		transTable := uitable.New()
-		transTable.MaxColWidth = 50
-		transTable.RightAlign(0)
-		transTable.RightAlign(2)
-		transTable.RightAlign(4)
+		const padding = 0
+		w := tabwriter.NewWriter(v4, 30, 0, padding, ' ', tabwriter.TabIndent)
 
-		transTable.AddRow("Connection: ", " |", "ETA: ", " |", "Seeds: ", " |")
-		transTable.AddRow("Downloaded: ", " |", "Uploaded: ", " |", "Peers: ", " |")
-		transTable.AddRow("Down Speed: ", " |", "Up Speed: ", " |", "Wasted: ", " |")
-		fmt.Fprintf(v4, "%v", transTable)
+		fmt.Fprintln(w, "Connection: \tETA: \tSeeds: \t")
+		fmt.Fprintln(w, "Downloaded: \tUploaded: \tPeers: \t")
+		fmt.Fprintln(w, "Down Speed: \tUp Speed: \tWasted: \t")
+
+		w.Flush()
 	}
 
 	if v5, err := g.SetView("information", int(0.15*float32(maxX)+1), int(0.65*float32(maxY)+1), maxX-2, int(0.9*float32(maxY)-1)); err != nil {
@@ -210,15 +229,14 @@ func Layout(g *gocui.Gui) error {
 			return err
 		}
 		v5.Title = "Information"
-		infoTable := uitable.New()
-		infoTable.MaxColWidth = 50
-		infoTable.RightAlign(0)
-		infoTable.RightAlign(2)
+		const padding = 0
+		w := tabwriter.NewWriter(v5, 30, 0, padding, ' ', tabwriter.TabIndent)
 
-		infoTable.AddRow("Size: ", " |", "Files: ", " |", "Added at:", " |")
-		infoTable.AddRow("InfoHash: ", " |", "Pieces: ", " |")
-		infoTable.AddRow("Save Path: ", " |")
-		fmt.Fprintf(v5, "%v", infoTable)
+		fmt.Fprintln(w, "Size: \tFiles: \tAdded at: \t")
+		fmt.Fprintln(w, "InfoHash: \tPieces: \t")
+		fmt.Fprintln(w, "Save Path: \t")
+
+		w.Flush()
 
 	}
 
@@ -253,10 +271,21 @@ func Layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		table := uitable.New()
-		table.MaxColWidth = 65
-		table.AddRow("|NO", "|URL", "|STATUS", "|SEEDS", "|LEECHERS")
-		fmt.Fprintf(v8, "%v", table)
+
+		table2 := tablewriter.NewWriter(v8)
+
+		//temp table style
+		table2.SetAutoWrapText(false)
+		table2.SetBorder(false)
+		table2.SetHeaderLine(false)
+		table2.SetCenterSeparator("_")
+		table2.SetColumnSeparator("|")
+		table2.SetRowSeparator("_")
+
+		//temp header
+		table2.SetHeader([]string{"NO", "URL", "STATUS", "SEEDS", "LEECHERS"})
+		table2.Render()
+
 		v8.Title = "Tracker"
 		g.SetViewOnBottom(v8.Name())
 		v8.SetCursor(0, 1)
@@ -267,10 +296,20 @@ func Layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		table := uitable.New()
-		table.MaxColWidth = 65
-		table.AddRow("|ADDRESS", "|CLIENT", "|DOWNLOAD SPEED", "|UPLOAD SPEED", "|SOURCE")
-		fmt.Fprintf(v9, "%v", table)
+
+		table2 := tablewriter.NewWriter(v9)
+		//temp table style
+		table2.SetAutoWrapText(false)
+		table2.SetBorder(false)
+		table2.SetHeaderLine(false)
+		table2.SetCenterSeparator("_")
+		table2.SetColumnSeparator("|")
+		table2.SetRowSeparator("_")
+
+		//temp header
+		table2.SetHeader([]string{"ADDRESS", "CLIENT", "DOWNLOAD SPEED", "UPLOAD SPEED", "SOURCE"})
+		table2.Render()
+
 		v9.Title = "Peers"
 		g.SetViewOnBottom(v9.Name())
 		v9.SetCursor(0, 1)
