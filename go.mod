@@ -1,4 +1,4 @@
-module aptorrent
+module github.com/likjou/TBitTorrent
 
 go 1.18
 

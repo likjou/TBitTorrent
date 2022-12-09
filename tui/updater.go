@@ -7,7 +7,7 @@ import (
 
 	"text/tabwriter"
 
-	u "aptorrent/utils"
+	u "github.com/likjou/TBitTorrent/utils"
 
 	human "github.com/dustin/go-humanize"
 	"github.com/jroimartin/gocui"
@@ -167,7 +167,7 @@ func Layout(g *gocui.Gui) error {
 		fmt.Fprintln(v1, "Stopped")
 		fmt.Fprintln(v1, "Verifying")
 
-		v1.Title = "APTorrent"
+		v1.Title = "TBitTorrent"
 		v1.Highlight = true
 
 		if _, err = u.SetCurrentViewOnTop(g, "side"); err != nil {
