@@ -6,13 +6,15 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"text/tabwriter"
 	"time"
+
+	c "aptorrent/config"
 
 	"github.com/cenkalti/rain/torrent"
 	human "github.com/dustin/go-humanize"
-	"github.com/gosuri/uitable"
 	"github.com/jroimartin/gocui"
-	c "github.com/likjou/TBitTorrent/config"
+	"github.com/olekukonko/tablewriter"
 )
 
 var (
@@ -690,23 +692,6 @@ func GeneralView(g *gocui.Gui) error {
 	v5.Clear()
 	torInfo := CurrInfo
 
-	transTable := uitable.New()
-	transTable.MaxColWidth = 50
-	transTable.RightAlign(0)
-	transTable.RightAlign(1)
-	transTable.RightAlign(2)
-	transTable.RightAlign(3)
-	transTable.RightAlign(4)
-	transTable.RightAlign(5)
-
-	infoTable := uitable.New()
-	infoTable.MaxColWidth = 50
-	infoTable.RightAlign(0)
-	infoTable.RightAlign(1)
-	infoTable.RightAlign(2)
-	infoTable.RightAlign(3)
-	infoTable.RightAlign(4)
-
 	torPeers := strconv.Itoa(torInfo.Stats().Peers.Total)
 	torInfoHash := torInfo.InfoHash().String()
 	torDownSpeed := human.Bytes(uint64(torInfo.Stats().Speed.Download))
@@ -737,16 +722,24 @@ func GeneralView(g *gocui.Gui) error {
 	} else {
 		torETA = tempETA.String()
 	}
-	transTable.AddRow("Connection: ", torConnection+"|", "ETA: ", torETA+"|", "Seeds: ", torSeed+"|")
-	transTable.AddRow("Downloaded: ", torDownloaded+"|", "Uploaded: ", torUploaded+"|", "Peers: ", torPeers+"|")
-	transTable.AddRow("Down Speed: ", torDownSpeed+"|", "Up Speed: ", torUpSpeed+"|", "Wasted: ", torWasted+"|")
-	transTable.AddRow()
-	fmt.Fprintf(v4, "%v", transTable)
 
-	infoTable.AddRow("Size: ", torSize+"|", "Files: ", torFileCount+"|", "Added at: ", torAddedAt+"|")
-	infoTable.AddRow("InfoHash: ", torInfoHash+"|", "Pieces: ", pieces+"|")
-	infoTable.AddRow("Save Path: ", savePath+"|")
-	fmt.Fprintf(v5, "%v", infoTable)
+	const padding = 0
+	w := tabwriter.NewWriter(v4, 15, 0, padding, ' ', tabwriter.TabIndent)
+
+	fmt.Fprintf(w, "Connection: \t%v\tETA: \t%v\tSeeds: \t%v\t\n", torConnection, torETA, torSeed)
+	fmt.Fprintf(w, "Downloaded: \t%v\tUploaded: \t%v\tPeers: \t%v\t\n", torDownloaded, torUploaded, torPeers)
+	fmt.Fprintf(w, "Down Speed: \t%v\tUp Speed: \t%v\tWasted: \t%v\t", torDownSpeed, torUpSpeed, torWasted)
+
+	w.Flush()
+
+	w2 := tabwriter.NewWriter(v5, 15, 0, padding, ' ', tabwriter.TabIndent)
+
+	fmt.Fprintf(w2, "Size: \t%v\tFiles: \t%v\tAdded at: \t%v\t\n", torSize, torFileCount, torAddedAt)
+	fmt.Fprintf(w2, "InfoHash: \t%v\tPieces: \t%v\t\n", torInfoHash, pieces)
+	fmt.Fprintf(w2, "Down Speed: \t%v\t", savePath)
+
+	w2.Flush()
+
 	return nil
 }
 
@@ -762,15 +755,25 @@ func TrackerView(g *gocui.Gui) error {
 	v4.Highlight = true
 
 	tracker := CurrInfo.Trackers()
-	table := uitable.New()
-	table.MaxColWidth = 65
-	table.AddRow("|NO", "|URL", "|STATUS", "|SEEDS", "|LEECHERS")
+
+	//temp table specify view as io
+	table2 := tablewriter.NewWriter(v4)
+	table2.SetHeader([]string{"NO", "URL", "STATUS", "SEEDS", "LEECHERS"})
+
+	//temp table style
+	table2.SetAutoWrapText(false)
+	table2.SetBorder(false)
+	table2.SetHeaderLine(false)
+	table2.SetCenterSeparator("_")
+	table2.SetColumnSeparator("|")
+	table2.SetRowSeparator("_")
 
 	for i, n := range tracker {
 
-		table.AddRow("|"+strconv.Itoa(i+1), "|"+n.URL, "|"+statList[int(n.Status)], "|"+strconv.Itoa(n.Seeders), "|"+strconv.Itoa(n.Leechers))
+		table2.Append([]string{strconv.Itoa(i + 1), n.URL, statList[int(n.Status)], strconv.Itoa(n.Seeders), strconv.Itoa(n.Leechers)})
 	}
-	fmt.Fprintf(v4, "%v", table)
+
+	table2.Render()
 	return nil
 }
 
@@ -785,14 +788,24 @@ func PeersView(g *gocui.Gui) error {
 	v4.Highlight = true
 
 	allpeers := CurrInfo.Peers()
-	table := uitable.New()
-	table.MaxColWidth = 65
-	table.AddRow("|ADDRESS", "|CLIENT", "|DOWNLOAD SPEED", "|UPLOAD SPEED", "|SOURCE")
+
+	//temp table specify view as io
+	table2 := tablewriter.NewWriter(v4)
+	table2.SetHeader([]string{"ADDRESS", "CLIENT", "DOWNLOAD SPEED", "UPLOAD SPEED", "SOURCE"})
+
+	//temp table style
+	table2.SetAutoWrapText(false)
+	table2.SetBorder(false)
+	table2.SetHeaderLine(false)
+	table2.SetCenterSeparator("_")
+	table2.SetColumnSeparator("|")
+	table2.SetRowSeparator("_")
 
 	for _, n := range allpeers {
-		table.AddRow("|"+n.Addr.String(), "|"+n.Client, "|"+human.Bytes(uint64(n.DownloadSpeed)), "|"+human.Bytes(uint64(n.UploadSpeed)), "|"+strconv.Itoa(int(n.Source)))
+		table2.Append([]string{n.Addr.String(), n.Client, human.Bytes(uint64(n.DownloadSpeed)), human.Bytes(uint64(n.UploadSpeed)), strconv.Itoa(int(n.Source))})
 	}
-	fmt.Fprintf(v4, "%v", table)
+	// fmt.Fprintf(v4, "%v", table)
+	table2.Render()
 	return nil
 }
 

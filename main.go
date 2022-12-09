@@ -3,11 +3,14 @@ package main
 import (
 	"log"
 
+	k "aptorrent/keybindings"
+
+	t "aptorrent/tui"
+
+	u "aptorrent/utils"
+
 	"github.com/cenkalti/rain/torrent"
 	"github.com/jroimartin/gocui"
-	k "github.com/likjou/TBitTorrent/keybindings"
-	t "github.com/likjou/TBitTorrent/tui"
-	u "github.com/likjou/TBitTorrent/utils"
 )
 
 // run application
