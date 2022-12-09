@@ -20,3 +20,5 @@ Thanks to [Gocui](https://github.com/jroimartin/gocui) and [rain](https://github
 
 UPDATE:
 01-12-2022: Fixed character display error in printing tables.
+09-12-2022: Uploaded wrong folder in previous fix, reupload
+09-12-2022: fixed displaying long name cause table to disappear
