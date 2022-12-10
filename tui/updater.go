@@ -63,9 +63,8 @@ func torListTicker(g *gocui.Gui, v *gocui.View) {
 				torDownSpeed := human.Bytes(uint64(tor.Stats().Speed.Download))
 				torUpSpeed := human.Bytes(uint64(tor.Stats().Speed.Upload))
 
-				newName := ""
 				if len(torName) >= 55 {
-					newName = torName[:55] + "..."
+					torName = torName[:55] + "..."
 				}
 
 				table2.Append([]string{newName, torSize, torProg, torStatus, torSeed, torPeers, torDownSpeed, torUpSpeed})
