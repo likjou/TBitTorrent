@@ -287,7 +287,7 @@ func DelTorrentView(g *gocui.Gui, v *gocui.View) error {
 		fmt.Fprintf(v, "%v", "Existing Torrents:\n")
 
 		for i, n := range allTors {
-			fmt.Fprintf(v, "[%v] %v\n", i, n.Name())
+			fmt.Fprintf(v, "[%v] %v\n", i, n.Stats().Name)
 		}
 		if _, err2 := g.SetCurrentView(name); err != nil {
 			return err2
