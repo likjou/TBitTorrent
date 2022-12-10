@@ -67,7 +67,7 @@ func torListTicker(g *gocui.Gui, v *gocui.View) {
 					torName = torName[:50] + "..."
 				}
 
-				table2.Append([]string{newName, torSize, torProg, torStatus, torSeed, torPeers, torDownSpeed, torUpSpeed})
+				table2.Append([]string{torName, torSize, torProg, torStatus, torSeed, torPeers, torDownSpeed, torUpSpeed})
 			}
 
 			table2.Render()
