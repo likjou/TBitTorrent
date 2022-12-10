@@ -37,7 +37,7 @@ func torListTicker(g *gocui.Gui, v *gocui.View) {
 			table2 := tablewriter.NewWriter(v)
 
 			//temp table style
-			table2.SetColWidth(60)
+			table2.SetColWidth(55)
 			table2.SetAutoWrapText(true)
 			table2.SetBorder(false)
 			table2.SetHeaderLine(false)
@@ -64,7 +64,7 @@ func torListTicker(g *gocui.Gui, v *gocui.View) {
 				torUpSpeed := human.Bytes(uint64(tor.Stats().Speed.Upload))
 
 				if len(torName) >= 55 {
-					torName = torName[:55] + "..."
+					torName = torName[:50] + "..."
 				}
 
 				table2.Append([]string{newName, torSize, torProg, torStatus, torSeed, torPeers, torDownSpeed, torUpSpeed})
