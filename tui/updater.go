@@ -49,7 +49,7 @@ func torListTicker(g *gocui.Gui, v *gocui.View) {
 			table2.SetHeader([]string{"NAME", "SIZE", "PROGRESS", "STATUS", "SEEDS", "PEERS", "DOWN SPEED", "UP SPEED"})
 
 			for _, tor := range u.FilteredTors {
-				torName := tor.Name()
+				torName := tor.Stats().name
 				torSize := human.Bytes(uint64(tor.Stats().Bytes.Total))
 				torProg := human.Bytes(uint64(tor.Stats().Bytes.Completed))
 				torStatus := tor.Stats().Status.String()
