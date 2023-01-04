@@ -22,3 +22,4 @@ UPDATE:<br />
 01-12-2022: Fixed character display error in printing tables.<br />
 09-12-2022: Uploaded wrong folder in previous fix, reupload<br />
 09-12-2022: fixed displaying long name cause table to disappear<br />
+04-01-2023: fixed if torrent name not found will return name not found instead of blank<br />
