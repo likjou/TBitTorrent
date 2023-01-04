@@ -7,7 +7,7 @@ import (
 
 	"text/tabwriter"
 
-	u "github.com/likjou/TBitTorrent/utils"
+	u "APTorrent/utils"
 
 	human "github.com/dustin/go-humanize"
 	"github.com/jroimartin/gocui"
@@ -38,7 +38,7 @@ func torListTicker(g *gocui.Gui, v *gocui.View) {
 
 			//temp table style
 			table2.SetColWidth(55)
-			table2.SetAutoWrapText(true)
+			table2.SetAutoWrapText(false)
 			table2.SetBorder(false)
 			table2.SetHeaderLine(false)
 			table2.SetCenterSeparator("_")
@@ -49,7 +49,21 @@ func torListTicker(g *gocui.Gui, v *gocui.View) {
 			table2.SetHeader([]string{"NAME", "SIZE", "PROGRESS", "STATUS", "SEEDS", "PEERS", "DOWN SPEED", "UP SPEED"})
 
 			for _, tor := range u.FilteredTors {
-				torName := tor.Stats().Name
+				// torName := tor.Stats().Name
+				tmpName := tor.Name()
+				tmpName2 := tor.Stats().Name
+				torName := ""
+				if tmpName == "" {
+					if tmpName2 == "" {
+						torName = "Name not Found"
+					} else {
+						torName = tor.Stats().Name
+					}
+				} else {
+					torName = tor.Name()
+				}
+
+				// torName = tor.Stats().Name
 				torSize := human.Bytes(uint64(tor.Stats().Bytes.Total))
 				torProg := human.Bytes(uint64(tor.Stats().Bytes.Completed))
 				torStatus := tor.Stats().Status.String()
