@@ -23,3 +23,4 @@ UPDATE:<br />
 09-12-2022: Uploaded wrong folder in previous fix, reupload<br />
 09-12-2022: fixed displaying long name cause table to disappear<br />
 04-01-2023: fixed if torrent name not found will return name not found instead of blank<br />
+15-06-2023: fixed import error on tui/helpers.go<br />
