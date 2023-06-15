@@ -7,7 +7,7 @@ import (
 
 	"text/tabwriter"
 
-	u "APTorrent/utils"
+	u "github.com/likjou/TBitTorrent/utils"
 
 	human "github.com/dustin/go-humanize"
 	"github.com/jroimartin/gocui"
