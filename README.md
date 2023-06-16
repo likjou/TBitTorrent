@@ -24,3 +24,13 @@ UPDATE:<br />
 09-12-2022: fixed displaying long name cause table to disappear<br />
 04-01-2023: fixed if torrent name not found will return name not found instead of blank<br />
 15-06-2023: fixed import error on tui/helpers.go<br />
+
+## Instruction
+- Make sure you have at least Go version 1.18 and above
+- Download  and extract the tbittorrent-main.zip file
+- cd into tbittorrent-main 
+- use `go run .` to run OR `go build .` to build
+
+## warning
+- tbitorrent will crash if the window size is too small
+
